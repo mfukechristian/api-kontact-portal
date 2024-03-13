@@ -1,5 +1,5 @@
-using KontackPortal.API.Helpers;
-using KontackPortal.API.Models;
+using KontackPortal.Domain.DTOs;
+using KontackPortal.DomainLogic.Interface;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,17 +9,22 @@ namespace KontackPortal.API.Controllers
     [Route("api/[controller]")]
     public class ContactController : ControllerBase
     {
-        private readonly ContactContext _context;
-        public ContactController(ContactContext context)
+        private readonly IContactService _contactService;
+        public ContactController(IContactService contactService)
         {
-            _context = context;
+            _contactService = contactService;
         }
 
-         // GET: api/contact
+        /// <summary>
+        ///     Get all Contacts.
+        /// </summary>
+        /// <returns>List of contacts.</returns>
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ContactModel>>> GetContacts()
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(500)]
+        public async Task<ActionResult<List<Contact>>> GetAllContacts()
         {
-            var contacts = await _context.Contacts.ToListAsync();
+            var contacts = await _contactService.GetAllAsync();
             return Ok(contacts);
         }
     }

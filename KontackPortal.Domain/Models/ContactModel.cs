@@ -1,4 +1,5 @@
-namespace KontackPortal.API.Models
+
+namespace KontackPortal.Domain.Models
 {
     public class ContactModel
     {
