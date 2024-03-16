@@ -25,5 +25,31 @@ namespace KontackPortal.Repository.Repositories
              return contact;
         }
 
+        public async Task<ContactModel> PostAsync(ContactModel contact)
+        {
+            contact.Created = DateTime.UtcNow;
+            contact.Updated = contact.Created;
+            _dbcontext.Add(contact);
+            await _dbcontext.SaveChangesAsync();
+            return contact;
+        }
+
+        public async Task<ContactModel> PutAsync(ContactModel contact)
+        {
+            contact.Updated = contact.Created;
+            _dbcontext.Update(contact);
+            await _dbcontext.SaveChangesAsync();
+            return contact;
+        }
+
+        public async Task<ContactModel> DeleteAsync(ContactModel contact)
+        {
+            _dbcontext.Remove(contact);
+            await _dbcontext.SaveChangesAsync();
+            return contact;
+        }
+
+  
+
     }
 }

@@ -1,4 +1,5 @@
 using KontackPortal.Domain.DTOs;
+using KontackPortal.Domain.Models;
 using KontackPortal.DomainLogic.Interface;
 using KontackPortal.Repository.Interfaces;
 
@@ -7,6 +8,7 @@ namespace KontackPortal.DomainLogic.Services
     public class ContactServices : IContactService
     {
         private readonly IContactRepository _contactRepository;
+
         public ContactServices(IContactRepository contactRepository)
         {
             _contactRepository = contactRepository;
@@ -20,13 +22,83 @@ namespace KontackPortal.DomainLogic.Services
 
         public async Task<Contact> GetAsync(int id)
         {
-            var result= await _contactRepository.GetAsync(id);
+            var result = await _contactRepository.GetAsync(id);
+            return result != null ? new Contact(result) : null;
+        }
 
-            if(result != null){
-                return  new Contact(result);
-            }else{
-                return null;
+        public async Task<Contact> PostAsync(ContactCreate contact)
+        {
+            var contactModel = new ContactModel()
+            {
+                Name = contact.Name,
+                Email = contact.Email,
+                Relationship = contact.Relationship,
+                PhoneNumber = contact.PhoneNumber,
+            };
+
+            var createdContact = await _contactRepository.PostAsync(contactModel);
+            return new Contact(createdContact);
+        }
+
+        public async Task<Contact> PutAsync(int id, ContactUpdate contact)
+        {
+            var existingContact = await _contactRepository.GetAsync(id);
+            if (existingContact == null)
+            {
+                return null; 
             }
+
+            existingContact.Name = contact.Name;
+            existingContact.Email = contact.Email;
+            existingContact.Relationship = contact.Relationship;
+            existingContact.PhoneNumber = contact.PhoneNumber;
+
+            await _contactRepository.PutAsync(existingContact);
+
+            return new Contact(existingContact);
+        }
+
+        public async Task<Contact> PatchAsync(int id, ContactPatch contact)
+        {
+            var existingContact = await _contactRepository.GetAsync(id);
+            if (existingContact == null)
+            {
+                return null; 
+            }
+
+            if (contact.Name != null)
+            {
+                existingContact.Name = contact.Name;
+            }
+            if (contact.Email != null)
+            {
+                existingContact.Email = contact.Email;
+            }
+            if (contact.Relationship != null)
+            {
+                existingContact.Relationship = contact.Relationship;
+            }
+            if (contact.PhoneNumber != null)
+            {
+                existingContact.PhoneNumber = contact.PhoneNumber;
+            }
+
+            await _contactRepository.PutAsync(existingContact);
+
+            return new Contact(existingContact);
+        }
+
+        public async Task<Contact?> DeleteAsync(int id)
+        {
+            var existingContact = await _contactRepository.GetAsync(id);
+            if (existingContact == null)
+            {
+                return null; 
+            }
+
+            await _contactRepository.DeleteAsync(existingContact);
+
+            return new Contact(existingContact);
         }
     }
 }
