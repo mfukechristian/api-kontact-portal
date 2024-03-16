@@ -27,5 +27,28 @@ namespace KontackPortal.API.Controllers
             var contacts = await _contactService.GetAllAsync();
             return Ok(contacts);
         }
+
+   
+             /// <summary>
+            ///     Get Single Contact.
+            /// </summary>
+            /// <param name="id">The ID of the contact to retrieve.</param>
+            /// <returns>The requested contact.</returns>
+            [HttpGet("{id}")]
+            [ProducesResponseType(StatusCodes.Status200OK)]
+            [ProducesResponseType(StatusCodes.Status404NotFound)]
+            [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+            public async Task<ActionResult<Contact>> GetContact([FromRoute] int id)
+            {
+                var contact = await _contactService.GetAsync(id);
+
+                if (contact == null)
+                {
+                    return NotFound(new Contact { Id = id });
+                }
+
+                return Ok(contact);
+            }
+
     }
 }

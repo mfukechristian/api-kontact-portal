@@ -17,5 +17,16 @@ namespace KontackPortal.DomainLogic.Services
             var result = await _contactRepository.GetAllAsync();
             return result.Select(contactModel => new Contact(contactModel)).ToList();
         }
+
+        public async Task<Contact> GetAsync(int id)
+        {
+            var result= await _contactRepository.GetAsync(id);
+
+            if(result != null){
+                return  new Contact(result);
+            }else{
+                return null;
+            }
+        }
     }
 }

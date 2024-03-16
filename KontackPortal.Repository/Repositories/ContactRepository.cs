@@ -2,7 +2,6 @@ using KontackPortal.Domain.Models;
 using KontackPortal.Repository.Helpers;
 using KontackPortal.Repository.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic; // Add this namespace for List<T>
 
 namespace KontackPortal.Repository.Repositories
 {
@@ -19,5 +18,12 @@ namespace KontackPortal.Repository.Repositories
             var contacts = await query.ToListAsync();
             return contacts;
         }
+
+        public async Task<ContactModel> GetAsync(int id)
+        {
+             var contact = await _dbcontext.Contacts.FindAsync(id);
+             return contact;
+        }
+
     }
 }

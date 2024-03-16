@@ -18,6 +18,9 @@ namespace KontackPortal.Domain.DTOs
             Relationship = contact.Relationship;
             PhoneNumber = contact.PhoneNumber;
         }
-        
+
+        public Contact()
+        {
+        }
     }
 }
